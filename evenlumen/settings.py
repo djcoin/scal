@@ -134,8 +134,13 @@ INSTALLED_APPS = [
     "pinax.eventlog",
 
     # project
-    "evenlumen",
+
+    'taggit',
+    'evenlumen',
+    'event.apps.EventConfig',
+    'opinion.apps.OpinionConfig',
 ]
+
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
