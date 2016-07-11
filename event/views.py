@@ -6,6 +6,13 @@ from django.http import HttpResponse
 # https://github.com/pinax/pinax-documents/blob/master/pinax/documents/views.py
 
 from account.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView,ListView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.core.urlresolvers import reverse_lazy
+
+
+from .forms import CreateEventForm
+from .models import Event
 
 
 from django.views.generic import (
@@ -16,32 +23,29 @@ from django.views.generic import (
 )
 
 
-class IndexView(LoginRequiredMixin, TemplateView):
-
-    template_name = "event/index.html"
-
-    def get_context_data(self, **kwargs):
-        ctx = kwargs
-        return ctx
-
-
-# def index(request):
-#     return HttpResponse("Hello, world. You're at the polls index.")
-
-
-
-class CreateView(LoginRequiredMixin, TemplateView):
-
-    template_name = "event/create.html"
-
+class EventCreate(LoginRequiredMixin, CreateView):
+    model = Event
+    form_class = CreateEventForm
+    success_url = reverse_lazy('event:event_list')
 
     def form_valid(self, form):
         form.instance.modified_by = self.request.user
-        return super(CreateView, self).form_valid(form)
+        return super(EventCreate, self).form_valid(form)
 
 
-class EditView(LoginRequiredMixin, TemplateView):
+class EventUpdate(LoginRequiredMixin, UpdateView):
+    model = Event
+    form_class = CreateEventForm
+    success_url = reverse_lazy('event:event_list')
 
-    template_name = "event/edit.html"
+    def form_valid(self, form):
+        form.instance.modified_by = self.request.user
+        return super(EventUpdate, self).form_valid(form)
+
+
+class EventList(LoginRequiredMixin, ListView):
+    model = Event
+    success_url = reverse_lazy('event:event_list')
+
 
 

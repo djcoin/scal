@@ -1,4 +1,4 @@
-const templatePath = '{{ project_name }}/templates/';
+const templatePath = 'scal/templates/';
 const staticRoot = 'static/';
 const staticSource = staticRoot + 'src/';
 const staticBuild = staticRoot + '_build/';

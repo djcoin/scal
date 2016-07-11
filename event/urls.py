@@ -5,8 +5,8 @@ from . import views
 
 
 urlpatterns = [
-    url(r'^$', views.IndexView.as_view(), name="index"),
-    # url(r'^edit$', views.EditView.as_view(), name="event-edit")
-    url(r'^create$', views.CreateView.as_view(), name="event-create")
+    url(r'^$', views.EventList.as_view(), name="event_list"),
+    url(r'^create$', views.EventCreate.as_view(), name="event_create"),
+    url(r'^edit/(?P<pk>\d+)$', views.EventUpdate.as_view(), name='event_edit'),
 ]
 

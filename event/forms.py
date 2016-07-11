@@ -3,6 +3,9 @@ from __future__ import unicode_literals
 from django import forms
 from .models import (Event, Element)
 
+from django.forms import ModelForm
+from datetimewidget.widgets import DateTimeWidget, DateWidget
+
 
 
 # https://github.com/pinax/pinax-documents/blob/master/pinax/documents/forms.py
@@ -16,10 +19,10 @@ class CreateEventForm(ModelForm):
     class Meta:
         model = Event
         exclude = ('created_by', 'created', 'modified', 'modified_by')
-
-    def __init__(self, *args, **kwargs):
-        super(TrackerForm, self).__init__(*args, **kwargs)
-
-
+        widgets = {
+        #Use localization and bootstrap 3
+            # 'date': DateTimeWidget(attrs={'id':"yourdatetimeid"}, usel10n = True, bootstrap_version=3)
+            'date': DateWidget(attrs={'id':"yourdatetimeid"}, usel10n = True, bootstrap_version=3)
+        }
 
 

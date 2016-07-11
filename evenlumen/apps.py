@@ -5,7 +5,7 @@ from django.apps import AppConfig as BaseAppConfig
 
 class AppConfig(BaseAppConfig):
 
-    name = "evenlumen"
+    name = "scal"
 
     def ready(self):
-        import_module("evenlumen.receivers")
+        import_module("scal.receivers")

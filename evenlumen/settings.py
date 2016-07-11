@@ -111,10 +111,10 @@ MIDDLEWARE_CLASSES = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "evenlumen.urls"
+ROOT_URLCONF = "scal.urls"
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = "evenlumen.wsgi.application"
+WSGI_APPLICATION = "scal.wsgi.application"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -126,8 +126,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     # theme
+    "bootstrap3",
     "bootstrapform",
     "pinax_theme_bootstrap",
+    "datetimewidget",
 
     # external
     "account",
@@ -136,7 +138,7 @@ INSTALLED_APPS = [
     # project
 
     'taggit',
-    'evenlumen',
+    'scal',
     'event.apps.EventConfig',
     'opinion.apps.OpinionConfig',
 ]

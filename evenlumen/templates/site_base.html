@@ -2,9 +2,15 @@
 
 {% load staticfiles %}
 {% load i18n %}
-
+{% load bootstrap3 %}
 
 {% block styles %}
+    {# <script src='/site_media/static/js/jquery.min.js'></script> #}
+    {# <script src="{{ STATIC_URL }}js/bootstrap.js"></script> #}
+    {# http://django-bootstrap3.readthedocs.io/en/latest/quickstart.html #}
+    {# https://github.com/dyve/django-bootstrap3/blob/develop/bootstrap3/templates/bootstrap3/bootstrap3.html #}
+
+    {% bootstrap_javascript jquery=1 %}
     {% include "_styles.html" %}
 {% endblock %}
 
