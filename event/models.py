@@ -1,137 +1,176 @@
+# -*- coding: utf-8 -*- 
+
 from __future__ import unicode_literals
 
-from functools import partial
+import json
 
 from django.db import models
-from django.conf import settings
-from django.utils import timezone
-from django.core.urlresolvers import reverse
-
-from taggit.managers import TaggableManager
 
 
-# https://github.com/pinax/pinax-documents/blob/master/pinax/documents/models.py
-# https://docs.djangoproject.com/fr/1.9/ref/models/fields/#foreignkey
 
-class Event(models.Model):
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="+")
-    created = models.DateTimeField(default=timezone.now)
-    modified = models.DateTimeField(default=timezone.now)
-    modified_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="+")
+class Organizer(models.Model):
+    name = models.CharField(max_length=200)
+    website = models.URLField(blank=True, default="")
+    facebook = models.URLField(blank=True, default="")
 
 
-    title = models.CharField(max_length=200)
+class Location(models.Model):
+    city = models.CharField(max_length=20)
+    area = models.CharField(max_length=50)
+    building = models.CharField(max_length=20)
+    address = models.CharField(max_length=200)
+
+
+class Person(models.Model):
+    name = models.CharField(max_length=60)
     description = models.TextField()
-    date = models.DateTimeField("when")
-    # parent = models.ForeignKey('self', on_delete=models.SET_NULL)
-
-    # duration..?
-
-    tags = TaggableManager()
 
 
-    def save(self, **kwargs):
-        self.touch(self.modified_by, commit=False)
-        super(Event, self).save(**kwargs)
+# class EventType(models.Model):
+# class EventSubject(models.Model):
+
+_event_type_choices = (
+    ('salon', 'salon'),
+    ('manifestation', 'manifestation'),
+    ('dedicace', 'dedicace'),
+    ('radio/mumble', 'radio/mumble'),
+    ('emission TV', 'emission TV'),
+    ('conference', 'conference'),
+)
+
+_event_subject_choices = (
+    ('geopolitic', 'géopolitique'),
+    ('politic', 'politique'),
+    ('economy', 'économie'),
+    ('ecology', 'écologie'),
+    ('alternative', 'alternative'),
+    ('media', 'média'),
+    ('history', 'histoire'),
+    ('spirituality', 'spiritualité'),
+    ('culture', 'cultures'),
+    ('science', 'sciences'),
+)
 
 
-    def touch(self, user, commit=True):
-        if not self.pk:
-            self.created_by = self.modified_by
-            self.modified = timezone.now()
-
-        self.modified = timezone.now()
-        if commit:
-            self.save()
-
-    def get_absolute_url(self):
-        return reverse('index')
-        # return reverse('event-detail', kwargs={'pk': self.pk})
-
-
-# https://docs.djangoproject.com/fr/1.9/ref/models/fields/#manytomanyfield
-
-# https://docs.djangoproject.com/fr/1.9/topics/db/models/#model-inheritance
-
-
-# https://github.com/bradleyg/django-s3direct
-
-
-
-# One element
-# One element are grouped on one event
-# one event is divided into multiple other events
-# what is the link? parental?
-
-
-
-
-
-class Element(models.Model):
-    """
-    This element is subject to discussion.
-    """
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="+")
-    created = models.DateTimeField(default=timezone.now)
-    modified = models.DateTimeField(default=timezone.now)
-    modified_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="+")
-
-    title = models.CharField(max_length=200)
-    description = models.TextField()
-    date = models.DateTimeField("when")
-
-    #
-    authenticity = models.FloatField()
-    interest = models.FloatField()
-
-    #
-    tags = TaggableManager()
-
-
-    def save(self, **kwargs):
-        self.touch(self.modified_by, commit=False)
-        super(Element, self).save(**kwargs)
-
-
-    def touch(self, user, commit=True):
-        if not self.pk:
-            self.created_by = self.modified_by
-            self.modified = timezone.now()
-
-        self.modified = timezone.now()
-        if commit:
-            self.save()
+# class Event(object):
+#     '''
+#     This model stores meta data for a date.  You can relate this data to many
+#     other models.
+#     '''
+#     start = models.DateTimeField(_("start"))
+#     end = models.DateTimeField(_("end"), help_text=_("The end time must be later than the start time."))
+#     title = models.CharField(_("title"), max_length=255)
+#     description = models.TextField(_("description"), null=True, blank=True)
+#     creator = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, verbose_name=_("creator"),
+#                                 related_name='creator')
+#     created_on = models.DateTimeField(_("created on"), auto_now_add=True)
+#     updated_on = models.DateTimeField(_("updated on"), auto_now=True)
+#     rule = models.ForeignKey(Rule, null=True, blank=True, verbose_name=_("rule"),
+#                              help_text=_("Select '----' for a one time only event."))
+#     end_recurring_period = models.DateTimeField(_("end recurring period"), null=True, blank=True,
+#                                                 help_text=_("This date is ignored for one time only events."))
+#     calendar = models.ForeignKey(Calendar, null=True, blank=True, verbose_name=_("calendar"))
+#     color_event = models.CharField(_("Color event"), null=True, blank=True, max_length=10)
+#     objects = EventManager()
+# 
+#     class Meta(object):
+#         verbose_name = _('event')
+#         verbose_name_plural = _('events')
+#         app_label = 'schedule'
+# 
+#     def __str__(self):
+#         return ugettext('%(title)s: %(start)s - %(end)s') % {
+#             'title': self.title,
+#             'start': date(self.start, django_settings.DATE_FORMAT),
+#             'end': date(self.end, django_settings.DATE_FORMAT),
+#         }
 
 
 
 
-def user_directory_path(pfx, instance, filename):
-    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return '{0}/user_{1}/{2}'.format(pfx, instance.user.id, filename)
+class CalData(models.Model):
+
+
+    name = models.CharField(max_length=200)
+    event_type = models.CharField(max_length=20, choices=_event_type_choices)
+    event_subject = models.CharField(max_length=20, choices=_event_subject_choices)
+
+    website = models.URLField(blank=True, default="")
+    facebook = models.URLField(blank=True, default="")
+
+    # registration
+    reg_price = models.CharField(max_length=300, blank=True, default="")
+    reg_type = models.CharField(max_length=100, blank=True, default="")
+    reg_email = models.CharField(max_length=50, blank=True, default="")
+    reg_website = models.URLField(blank=True, default="")
+    reg_facebook = models.URLField(blank=True, default="")
+
+    poster = models.FileField(blank=True, upload_to='uploads/')
+    landscape = models.FileField(blank=True, upload_to='uploads/')
+
+    organizers = models.ManyToManyField(Organizer, blank=True)
+    attendees = models.ManyToManyField(Person, blank=True)
+
+
+    def __str__(self):
+        return self.name
+
+
+    def poster_tag(self):
+        return u'<img src="%s" />' % self.poster
+
+    poster_tag.short_description = 'Poster image'
+    poster_tag.allow_tags = True
+
+
+    def landscape_tag(self):
+        return u'<img src="%s" />' % self.landscape
+
+    landscape_tag.short_description = 'Landscape image'
+    landscape_tag.allow_tags = True
+
+    def json_tag(self):
+        return u'<pre>' + self.as_json() + '</pre>'
+
+    json_tag.short_description = 'json look'
+    json_tag.allow_tags = True
+
+
+    def prepare_json(self):
+        d = {}
+        for x in ['name', 'event_type', 'event_subject', 'website', 'facebook',
+                  'reg_price', 'reg_type', 'reg_email', 'reg_website', 'reg_facebook']:
+            d[x] = getattr(self, x)
+
+        # print(self.organizers.all())
+
+        orgs = [{'name': o.name,
+                 'website': o.website,
+                 'facebook': o.facebook}
+                 for o in self.organizers.all()]
+
+        attendees = [{'name': p.name, 'description': p.description} for p in self.attendees.all()]
+
+        d['attendees'] = attendees
+        d['organizers'] = orgs
+
+        d['poster'] = str(self.poster)
+        d['landscape'] = str(self.landscape)
+
+        return d
+
+
+    def as_json(self, indent=4):
+        return json.dumps(self.prepare_json(), indent=indent)
 
 
 
-# url and upload could be multiple or a torrent or something
-
-class Video(Element):
-    url = models.URLField(blank=True, null=True)
-    upload = models.FileField(upload_to=partial(user_directory_path, 'vids'), blank=True, null=True)
+# start time
+# end time
+# duration
 
 
-class Image(Element):
-    url = models.URLField(blank=True, null=True)
-    upload = models.FileField(upload_to=partial(user_directory_path, 'imgs'), blank=True, null=True)
+# class Images(models.Model):
 
 
-class Sound(Element):
-    url = models.URLField(blank=True, null=True)
-    upload = models.FileField(upload_to=partial(user_directory_path, 'sounds'), blank=True, null=True)
-
-
-class Article(Element):
-    url = models.URLField(blank=True, null=True)
-    # upload could be a zip
-
-    # article is itself a bundle of element...
-    # sound may be, video may be, etc.
 
