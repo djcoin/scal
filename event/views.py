@@ -1,7 +1,9 @@
+
+import json
 from django.shortcuts import render
 
 
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 # https://github.com/pinax/pinax-documents/blob/master/pinax/documents/views.py
 
@@ -48,4 +50,14 @@ class EventList(LoginRequiredMixin, ListView):
     success_url = reverse_lazy('event:event_list')
 
 
+
+def widget(req):
+    return render(req, 'widget.html')
+
+def api(req):
+    js = [e.prepare_json() for e in Event.objects.all()]
+
+    # print(json.dumps(js))
+
+    return JsonResponse(js, safe=False)
 

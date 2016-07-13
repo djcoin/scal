@@ -6,6 +6,12 @@ import json
 
 from django.db import models
 
+from django.template.defaultfilters import date
+import datetime
+
+from django.utils.translation import ugettext, ugettext_lazy as _
+
+
 
 
 class Organizer(models.Model):
@@ -52,46 +58,44 @@ _event_subject_choices = (
 )
 
 
-# class Event(object):
-#     '''
-#     This model stores meta data for a date.  You can relate this data to many
-#     other models.
-#     '''
-#     start = models.DateTimeField(_("start"))
-#     end = models.DateTimeField(_("end"), help_text=_("The end time must be later than the start time."))
-#     title = models.CharField(_("title"), max_length=255)
-#     description = models.TextField(_("description"), null=True, blank=True)
-#     creator = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, verbose_name=_("creator"),
-#                                 related_name='creator')
-#     created_on = models.DateTimeField(_("created on"), auto_now_add=True)
-#     updated_on = models.DateTimeField(_("updated on"), auto_now=True)
-#     rule = models.ForeignKey(Rule, null=True, blank=True, verbose_name=_("rule"),
-#                              help_text=_("Select '----' for a one time only event."))
-#     end_recurring_period = models.DateTimeField(_("end recurring period"), null=True, blank=True,
-#                                                 help_text=_("This date is ignored for one time only events."))
-#     calendar = models.ForeignKey(Calendar, null=True, blank=True, verbose_name=_("calendar"))
-#     color_event = models.CharField(_("Color event"), null=True, blank=True, max_length=10)
-#     objects = EventManager()
-# 
-#     class Meta(object):
-#         verbose_name = _('event')
-#         verbose_name_plural = _('events')
-#         app_label = 'schedule'
-# 
-#     def __str__(self):
-#         return ugettext('%(title)s: %(start)s - %(end)s') % {
-#             'title': self.title,
-#             'start': date(self.start, django_settings.DATE_FORMAT),
-#             'end': date(self.end, django_settings.DATE_FORMAT),
-#         }
+class EventBase(models.Model):
+    '''
+    This model stores meta data for a date.  You can relate this data to many
+    other models.
+    '''
+
+    class Meta:
+        abstract = True
+
+    name = models.CharField(_("title"), max_length=255)
+
+    start = models.DateTimeField(_("start"))
+    end = models.DateTimeField(_("end"), help_text=_("The end time must be later than the start time."))
+    # creator = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, verbose_name=_("creator"),
+    #                             related_name='creator')
+    created_on = models.DateTimeField(_("created on"), auto_now_add=True)
+    updated_on = models.DateTimeField(_("updated on"), auto_now=True)
+    # rule = models.ForeignKey(Rule, null=True, blank=True, verbose_name=_("rule"),
+    #                          help_text=_("Select '----' for a one time only event."))
+    # end_recurring_period = models.DateTimeField(_("end recurring period"), null=True, blank=True,
+    #                                             help_text=_("This date is ignored for one time only events."))
+    # calendar = models.ForeignKey(Calendar, null=True, blank=True, verbose_name=_("calendar"))
+    # objects = EventManager()
+
+    def __str__(self):
+        return ugettext('%(name)s: %(start)s - %(end)s') % {
+            'title': self.title,
+            'start': date(self.start, django_settings.DATE_FORMAT),
+            'end': date(self.end, django_settings.DATE_FORMAT),
+        }
 
 
 
 
-class CalData(models.Model):
+class Event(EventBase):
 
 
-    name = models.CharField(max_length=200)
+    # name = models.CharField(max_length=200)
     event_type = models.CharField(max_length=20, choices=_event_type_choices)
     event_subject = models.CharField(max_length=20, choices=_event_subject_choices)
 
@@ -172,5 +176,211 @@ class CalData(models.Model):
 
 # class Images(models.Model):
 
+
+"""
+
+:cal
+[
+{
+:date
+[
+"2016-01-01"
+]
+:name
+"My event"
+:event
+"conference"
+:category
+[
+:geopolitic
+]
+:start-time
+"18:00"
+:end-time
+"19:30"
+}
+{
+:date
+[
+"2016-01-02"
+]
+:name
+"My event 2"
+:event
+"conference"
+:category
+[
+:economic
+]
+:start-time
+"19:15"
+:end-time
+"20:30"
+}
+{
+:date
+[
+"2016-01-07"
+]
+:name
+"Conf geo"
+:event
+"conference"
+:category
+[
+:geopolitic
+]
+:start-time
+"16:30"
+:end-time
+"18:00"
+:template
+"**Bonjour ceci est un test!** {{start-time}}"
+}
+]
+:events
+[
+{
+:date
+[
+"2016-01-01"
+]
+:name
+"My event"
+:event
+"conference"
+:category
+[
+:geopolitic
+]
+:start-time
+"18:00"
+:end-time
+"19:30"
+}
+{
+:date
+[
+"2016-01-02"
+]
+:name
+"My event 2"
+:event
+"conference"
+:category
+[
+:economic
+]
+:start-time
+"19:15"
+:end-time
+"20:30"
+}
+{
+:date
+[
+"2016-01-07"
+]
+:name
+"Conf geo"
+:event
+"conference"
+:category
+[
+:geopolitic
+]
+:start-time
+"16:30"
+:end-time
+"18:00"
+:template
+"**Bonjour ceci est un test!** {{start-time}}"
+}
+]
+:categories
+[
+{
+:type
+:geopolitic
+:text
+"Géopolitique"
+:color
+"#4100FF"
+}
+{
+:type
+:politic
+:text
+"Politique"
+:color
+"#2481eb"
+}
+{
+:type
+:economic
+:text
+"Économie"
+:color
+"#00ecb9"
+}
+{
+:type
+:ecologic
+:text
+"Écologie"
+:color
+"#00e253"
+}
+{
+:type
+:alternative
+:text
+"Alternatives"
+:color
+"#f9ff00"
+}
+{
+:type
+:media
+:text
+"Média"
+:color
+"#ffb800"
+}
+{
+:type
+:history
+:text
+"Histoire"
+:color
+"#ff0000"
+}
+{
+:type
+:spirituality
+:text
+"Spiritualité"
+:color
+"#ff00be"
+}
+{
+:type
+:culture
+:text
+"Culture"
+:color
+"#ae00f0"
+}
+]
+:filter
+nil
+:view
+{
+:date-range
+#{
+"2015-12-28" "2015-12-29" "2015-12-30" "2015-12-31" "2016-01-01" "2016-01-02" "2016-01-03"
+}
+}
+"""
 
 
