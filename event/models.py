@@ -19,6 +19,9 @@ class Organizer(models.Model):
     website = models.URLField(blank=True, default="")
     facebook = models.URLField(blank=True, default="")
 
+    def __str__(self):
+        return name
+
 
 class Location(models.Model):
     city = models.CharField(max_length=20)
@@ -30,6 +33,9 @@ class Location(models.Model):
 class Person(models.Model):
     name = models.CharField(max_length=60)
     description = models.TextField()
+
+    def __str__(self):
+        return name
 
 
 # class EventType(models.Model):
