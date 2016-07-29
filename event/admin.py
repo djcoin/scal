@@ -27,8 +27,8 @@ fields = [
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    fields = fields + ['poster', 'poster_tag', 'landscape', 'landscape_tag', 'json_tag' ]
-    readonly_fields = ('poster_tag', 'landscape_tag', 'json_tag')
+    fields = fields + ['poster', 'poster_tag', 'landscape', 'landscape_tag',] # 'json_tag' ]
+    readonly_fields = ['poster_tag', 'landscape_tag',] # 'json_tag')
 
 
 

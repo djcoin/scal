@@ -1,9 +1,11 @@
 
-import json
+import json, datetime
 from django.shortcuts import render
 
+# https://docs.djangoproject.com/fr/1.9/ref/request-response/
 
-from django.http import HttpResponse, JsonResponse
+
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 
 # https://github.com/pinax/pinax-documents/blob/master/pinax/documents/views.py
 
@@ -54,10 +56,31 @@ class EventList(LoginRequiredMixin, ListView):
 def widget(req):
     return render(req, 'widget.html')
 
+def to_date(s):
+    "Date format: YYYY-MM-DD"
+    return datetime.datetime.strptime(s, "%Y-%m-%d")
+
 def api(req):
-    js = [e.prepare_json() for e in Event.objects.all()]
+    """
+    Get events from start to end, eg:
+        http://localhost:8000/event/api/?start=2016-07-20&end=2016-07-28
+    """
+    start = req.GET.get('start')
+    end = req.GET.get('end')
+
+    if not start or not end:
+        return HttpResponseBadRequest("Missing start and end parameter")
+
+    try:
+        start = to_date(start)
+        end = to_date(end)
+    except ValueError:
+        return HttpResponseBadRequest("Bad format for start and end, should be YYYY-MM-DD")
+
+
+    js = [e.prepare_json() for e in Event.objects.filter(start__gte=start, end__lte=end).all()]
 
     # print(json.dumps(js))
 
-    return JsonResponse(js, safe=False)
+    return JsonResponse(js, safe=False, json_dumps_params={"indent": 2})
 

@@ -146,6 +146,10 @@ class Event(EventBase):
                   'reg_price', 'reg_type', 'reg_email', 'reg_website', 'reg_facebook']:
             d[x] = getattr(self, x)
 
+        for x in ['start', 'end']:
+            d[x] = getattr(self, x)
+
+
         # print(self.organizers.all())
 
         orgs = [{'name': o.name,
