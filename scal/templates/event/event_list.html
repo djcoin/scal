@@ -1,0 +1,19 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+
+{% block body_base %}
+
+<h1>Events</h1>
+<ul>
+    {% for event in object_list %}
+    <li>{{ event.title }}
+        <a href="{% url 'event:event_edit' event.id %}">edit</a>
+    {# <a href="{% url 'event:event_delete' event.id %}">delete</a> #}
+    </li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'event:event_create' %}">New</a>
+
+{% endblock %}
