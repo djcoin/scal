@@ -20,7 +20,7 @@ class Organizer(models.Model):
     facebook = models.URLField(blank=True, default="")
 
     def __str__(self):
-        return name
+        return self.name
 
 
 class Location(models.Model):
@@ -35,7 +35,7 @@ class Person(models.Model):
     description = models.TextField()
 
     def __str__(self):
-        return name
+        return self.name
 
 
 # class EventType(models.Model):
