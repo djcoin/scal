@@ -12,8 +12,6 @@ import datetime
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 
-
-
 class Organizer(models.Model):
     name = models.CharField(max_length=200)
     website = models.URLField(blank=True, default="")
@@ -25,9 +23,13 @@ class Organizer(models.Model):
 
 class Location(models.Model):
     city = models.CharField(max_length=20)
-    area = models.CharField(max_length=50)
-    building = models.CharField(max_length=20)
+    area = models.CharField(blank=True, default="", max_length=50)
+    building = models.CharField(blank=True, default="", max_length=20)
     address = models.CharField(max_length=200)
+    url = models.URLField(blank=True, default="")
+
+    def __str__(self):
+        return self.address + ' (' + self.city + ')'
 
 
 class Person(models.Model):
@@ -121,20 +123,23 @@ class Event(EventBase):
     organizers = models.ManyToManyField(Organizer, blank=True)
     attendees = models.ManyToManyField(Person, blank=True)
 
+    # TODO: remove null
+    location = models.ForeignKey(Location, null=True, blank=True, verbose_name=_("location"))
+
 
     def __str__(self):
         return self.name
 
 
     def poster_tag(self):
-        return u'<img src="%s" />' % self.poster
+        return u'<img src="%s" />' % self.poster.url
 
     poster_tag.short_description = 'Poster image'
     poster_tag.allow_tags = True
 
 
     def landscape_tag(self):
-        return u'<img src="%s" />' % self.landscape
+        return u'<img src="%s" />' % self.landscape.url
 
     landscape_tag.short_description = 'Landscape image'
     landscape_tag.allow_tags = True
@@ -156,7 +161,8 @@ class Event(EventBase):
             d[x] = getattr(self, x)
 
 
-        # print(self.organizers.all())
+        d['poster'] = str(self.poster.url if self.poster else None)
+        d['landscape'] = str(self.landscape.url if self.landscape else None)
 
         orgs = [{'name': o.name,
                  'website': o.website,
@@ -168,8 +174,6 @@ class Event(EventBase):
         d['attendees'] = attendees
         d['organizers'] = orgs
 
-        d['poster'] = str(self.poster)
-        d['landscape'] = str(self.landscape)
 
         return d
 
@@ -185,212 +189,5 @@ class Event(EventBase):
 
 
 # class Images(models.Model):
-
-
-"""
-
-:cal
-[
-{
-:date
-[
-"2016-01-01"
-]
-:name
-"My event"
-:event
-"conference"
-:category
-[
-:geopolitic
-]
-:start-time
-"18:00"
-:end-time
-"19:30"
-}
-{
-:date
-[
-"2016-01-02"
-]
-:name
-"My event 2"
-:event
-"conference"
-:category
-[
-:economic
-]
-:start-time
-"19:15"
-:end-time
-"20:30"
-}
-{
-:date
-[
-"2016-01-07"
-]
-:name
-"Conf geo"
-:event
-"conference"
-:category
-[
-:geopolitic
-]
-:start-time
-"16:30"
-:end-time
-"18:00"
-:template
-"**Bonjour ceci est un test!** {{start-time}}"
-}
-]
-:events
-[
-{
-:date
-[
-"2016-01-01"
-]
-:name
-"My event"
-:event
-"conference"
-:category
-[
-:geopolitic
-]
-:start-time
-"18:00"
-:end-time
-"19:30"
-}
-{
-:date
-[
-"2016-01-02"
-]
-:name
-"My event 2"
-:event
-"conference"
-:category
-[
-:economic
-]
-:start-time
-"19:15"
-:end-time
-"20:30"
-}
-{
-:date
-[
-"2016-01-07"
-]
-:name
-"Conf geo"
-:event
-"conference"
-:category
-[
-:geopolitic
-]
-:start-time
-"16:30"
-:end-time
-"18:00"
-:template
-"**Bonjour ceci est un test!** {{start-time}}"
-}
-]
-:categories
-[
-{
-:type
-:geopolitic
-:text
-"Géopolitique"
-:color
-"#4100FF"
-}
-{
-:type
-:politic
-:text
-"Politique"
-:color
-"#2481eb"
-}
-{
-:type
-:economic
-:text
-"Économie"
-:color
-"#00ecb9"
-}
-{
-:type
-:ecologic
-:text
-"Écologie"
-:color
-"#00e253"
-}
-{
-:type
-:alternative
-:text
-"Alternatives"
-:color
-"#f9ff00"
-}
-{
-:type
-:media
-:text
-"Média"
-:color
-"#ffb800"
-}
-{
-:type
-:history
-:text
-"Histoire"
-:color
-"#ff0000"
-}
-{
-:type
-:spirituality
-:text
-"Spiritualité"
-:color
-"#ff00be"
-}
-{
-:type
-:culture
-:text
-"Culture"
-:color
-"#ae00f0"
-}
-]
-:filter
-nil
-:view
-{
-:date-range
-#{
-"2015-12-28" "2015-12-29" "2015-12-30" "2015-12-31" "2016-01-01" "2016-01-02" "2016-01-03"
-}
-}
-"""
 
 

@@ -2,7 +2,7 @@
 
 from __future__ import unicode_literals
 from django.contrib import admin
-from .models import Organizer, Person, Event
+from .models import Organizer, Person, Location, Event
 
 
 @admin.register(Organizer)
@@ -15,12 +15,18 @@ class PersonAdmin(admin.ModelAdmin):
         pass
 
 
+@admin.register(Location)
+class LocationAdmin(admin.ModelAdmin):
+        pass
+
+
 fields = [
     'name', 'start', 'end',
     'event_type', 'event_subject', 'website', 'facebook',
     'reg_price', 'reg_type', 'reg_email', 'reg_website', 'reg_facebook',
     'organizers',
-    'attendees'
+    'attendees',
+    'location',
 ]
 
 
