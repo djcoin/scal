@@ -17,7 +17,7 @@ class Organizer(models.Model):
     website = models.URLField(blank=True, default="")
     facebook = models.URLField(blank=True, default="")
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 
@@ -28,7 +28,7 @@ class Location(models.Model):
     address = models.CharField(max_length=200)
     url = models.URLField(blank=True, default="")
 
-    def __str__(self):
+    def __unicode__(self):
         return self.address + ' (' + self.city + ')'
 
 
@@ -36,7 +36,7 @@ class Person(models.Model):
     name = models.CharField(max_length=60)
     description = models.TextField()
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 
@@ -90,7 +90,7 @@ class EventBase(models.Model):
     # calendar = models.ForeignKey(Calendar, null=True, blank=True, verbose_name=_("calendar"))
     # objects = EventManager()
 
-    def __str__(self):
+    def __unicode__(self):
         return ugettext('%(name)s: %(start)s - %(end)s') % {
             'title': self.title,
             'start': date(self.start, django_settings.DATE_FORMAT),
@@ -127,7 +127,7 @@ class Event(EventBase):
     location = models.ForeignKey(Location, null=True, blank=True, verbose_name=_("location"))
 
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 
@@ -173,6 +173,15 @@ class Event(EventBase):
 
         d['attendees'] = attendees
         d['organizers'] = orgs
+
+        if self.location:
+            d['location'] = {'city': self.location.city,
+                             'area': self.location.area,
+                             'building': self.location.building,
+                             'address': self.location.address,
+                             'url': self.location.url}
+        else:
+            d['location'] = None
 
 
         return d
