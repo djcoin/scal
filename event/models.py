@@ -161,8 +161,8 @@ class Event(EventBase):
             d[x] = getattr(self, x)
 
 
-        d['poster'] = str(self.poster.url if self.poster else None)
-        d['landscape'] = str(self.landscape.url if self.landscape else None)
+        d['poster'] = self.poster.url if self.poster else None
+        d['landscape'] = self.landscape.url if self.landscape else None
 
         orgs = [{'name': o.name,
                  'website': o.website,
