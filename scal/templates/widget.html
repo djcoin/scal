@@ -1,4 +1,5 @@
-{% extends "site_base.html" %}
+{% extends "raw_base.html" %}
+{# {% extends "site_base.html" %} #}
 
 <!--
 <!DOCTYPE html>
@@ -23,26 +24,34 @@
 
 -->
 {% block body_base %}
+
+<div id="scal"></div>
+
+
 <link href="/site_media/static/public/css/grille_style.css" rel="stylesheet" type="text/css">
 
 <script>
-
 // start, end: dates, format YYYY-MM-DD
 function getEvents(start, end, cb) {
     console.log('calling getEvents');
     var url = "{% url "event:event_api" %}" + "?start=" + start + "&end=" + end;
     $.get(url, cb);
 }
+</script>
 
-/*
-getEvents(function(res) {
-    console.log(res);
-});
-*/
+<script src='/site_media/static/public/js/compiled/grille.js'></script>
+
+<script>
+
+setTimeout(function() {
+    launchWidget();
+}, 50);
 
 </script>
 
+{% comment %}
 <script src='/site_media/static/public/js/compiled/grille_devcards.js'></script>
+{% endcomment %}
 
 {% endblock %}
 

@@ -77,8 +77,10 @@ def api(req):
     except ValueError:
         return HttpResponseBadRequest("Bad format for start and end, should be YYYY-MM-DD")
 
+    print(u"%s to %s" % (start, end))
 
-    js = [e.prepare_json() for e in Event.objects.filter(start__gte=start, end__lte=end).all()]
+
+    js = [e.prepare_json() for e in Event.objects.filter(start__date__gte=start, end__date__lte=end).all()]
 
     # print(json.dumps(js))
 

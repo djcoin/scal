@@ -8,3 +8,6 @@ pillow
 
 django-datetime-widget
 
+# django-modelclone
+
+# git+git://github.com/RealGeeks/django-modelclone.git@master

@@ -12,15 +12,6 @@ import datetime
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 
-class Organizer(models.Model):
-    name = models.CharField(max_length=200)
-    website = models.URLField(blank=True, default="")
-    facebook = models.URLField(blank=True, default="")
-
-    def __unicode__(self):
-        return self.name
-
-
 class Location(models.Model):
     city = models.CharField(max_length=20)
     area = models.CharField(blank=True, default="", max_length=50)
@@ -32,9 +23,20 @@ class Location(models.Model):
         return self.address + ' (' + self.city + ')'
 
 
+class Organizer(models.Model):
+    name = models.CharField(max_length=200)
+    website = models.URLField(blank=True, default="")
+    facebook = models.URLField(blank=True, default="")
+    image = models.FileField(blank=True, upload_to='uploads/')
+
+    def __unicode__(self):
+        return self.name
+
+
 class Person(models.Model):
     name = models.CharField(max_length=60)
     description = models.TextField()
+    image = models.FileField(blank=True, upload_to='uploads/')
 
     def __unicode__(self):
         return self.name
@@ -126,6 +128,7 @@ class Event(EventBase):
     # TODO: remove null
     location = models.ForeignKey(Location, null=True, blank=True, verbose_name=_("location"))
 
+    description = models.TextField(blank=True, default="")
 
     def __unicode__(self):
         return self.name
@@ -151,10 +154,17 @@ class Event(EventBase):
     json_tag.allow_tags = True
 
 
+    def get_city(self):
+        return self.location.city if self.location else None
+
+    get_city.short_description = 'City'
+    get_city.admin_order_field = 'location__city'
+
+
     def prepare_json(self):
         d = {}
         for x in ['name', 'event_type', 'event_subject', 'website', 'facebook',
-                  'reg_price', 'reg_type', 'reg_email', 'reg_website', 'reg_facebook']:
+                  'reg_price', 'reg_type', 'reg_email', 'reg_website', 'reg_facebook', 'description']:
             d[x] = getattr(self, x)
 
         for x in ['start', 'end']:
