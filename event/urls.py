@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^edit/(?P<pk>\d+)$', views.EventUpdate.as_view(), name='event_edit'),
 
     url(r'^widget/$', views.widget, name="event_widget"),
+    url(r'^devcards/$', views.devcards, name="event_devcards"),
     url(r'^api/$', views.api, name="event_api"),
 ]
 

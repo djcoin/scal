@@ -56,6 +56,11 @@ class EventList(LoginRequiredMixin, ListView):
 def widget(req):
     return render(req, 'widget.html')
 
+
+def devcards(req):
+    return render(req, 'devcards.html')
+
+
 def to_date(s):
     "Date format: YYYY-MM-DD"
     return datetime.datetime.strptime(s, "%Y-%m-%d")
