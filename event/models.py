@@ -171,6 +171,7 @@ class Event(EventBase):
             d[x] = getattr(self, x)
 
 
+        d['id'] = self.pk
         d['poster'] = self.poster.url if self.poster else None
         d['landscape'] = self.landscape.url if self.landscape else None
 

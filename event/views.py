@@ -56,6 +56,8 @@ class EventList(LoginRequiredMixin, ListView):
 def widget(req):
     return render(req, 'widget.html')
 
+def planning(req):
+    return render(req, 'planning.html')
 
 def devcards(req):
     return render(req, 'devcards.html')
