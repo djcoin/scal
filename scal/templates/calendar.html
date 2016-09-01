@@ -1,0 +1,58 @@
+{% extends "raw_base.html" %}
+{# {% extends "site_base.html" %} #}
+
+<!--
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta charset="UTF-8">
+        <link href="/site_media/static/public/css/grille_style.css" rel="stylesheet" type="text/css">
+    </head>
+
+    <script>
+    function getEvents() {
+        var url = "{% url "event:event_api" %}";
+
+    }
+    </script>
+
+    <body>
+        <script src='/site_media/static/public/js/compiled/grille_devcards.js'></script>
+    </body>
+</html>
+
+-->
+{% block body_base %}
+
+<div id="scal"></div>
+
+<link href="/site_media/static/public/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/site_media/static/public/css/grille_style.css" rel="stylesheet" type="text/css">
+
+<script>
+// start, end: dates, format YYYY-MM-DD
+function getEvents(start, end, cb) {
+    console.log('calling getEvents');
+    var url = "{% url "event:event_api" %}" + "?start=" + start + "&end=" + end;
+    $.get(url, cb);
+}
+</script>
+
+<script src='/site_media/static/public/js/compiled/grille.js'></script>
+
+<script>
+
+setTimeout(function() {
+    launchCalendar();
+}, 50);
+
+</script>
+
+{% comment %}
+<script src='/site_media/static/public/js/compiled/grille_devcards.js'></script>
+{% endcomment %}
+
+{% endblock %}
+

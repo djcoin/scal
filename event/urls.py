@@ -11,6 +11,8 @@ urlpatterns = [
 
     url(r'^widget/$', views.widget, name="event_widget"),
     url(r'^planning/$', views.planning, name="event_planning"),
+    url(r'^cal/$', views.calendar, name="event_calendar"),
+
     url(r'^devcards/$', views.devcards, name="event_devcards"),
     url(r'^api/$', views.api, name="event_api"),
 ]

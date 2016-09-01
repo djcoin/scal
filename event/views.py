@@ -59,6 +59,10 @@ def widget(req):
 def planning(req):
     return render(req, 'planning.html')
 
+def calendar(req):
+    return render(req, 'calendar.html')
+
+
 def devcards(req):
     return render(req, 'devcards.html')
 
