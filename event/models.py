@@ -46,12 +46,15 @@ class Person(models.Model):
 # class EventSubject(models.Model):
 
 _event_type_choices = (
-    ('salon', 'salon'),
-    ('manifestation', 'manifestation'),
-    ('dedicace', 'dedicace'),
-    ('radio/mumble', 'radio/mumble'),
-    ('emission TV', 'emission TV'),
-    ('conference', 'conference'),
+    ('salon' , u"Salon"),
+    ('manifestation' , u"Manifestation"),
+    ('dedicace' , u"Dédicace"),
+    ('mumble' , u"Mumble"),
+    ('emission TV' , u"Émission TV"),
+    ('conference' , u"Conférence"),
+    ('theatre' , u"Théatre"),
+    ('cinema' , u"Cinéma"),
+    ('emission-radio' , u"Émission radio"),
 )
 
 _event_subject_choices = (
