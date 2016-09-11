@@ -15,7 +15,7 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 class Location(models.Model):
     city = models.CharField(max_length=20)
     area = models.CharField(blank=True, default="", max_length=50)
-    building = models.CharField(blank=True, default="", max_length=20)
+    building = models.CharField(blank=True, default="", max_length=50)
     address = models.CharField(max_length=200)
     url = models.URLField(blank=True, default="")
 
