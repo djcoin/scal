@@ -15,5 +15,7 @@ urlpatterns = [
 
     url(r'^devcards/$', views.devcards, name="event_devcards"),
     url(r'^api/$', views.api, name="event_api"),
+
+    url(r'^api/event/(?P<pk>\d+)$', views.api_event, name="event_api_detail"),
 ]
 

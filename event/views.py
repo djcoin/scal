@@ -1,11 +1,13 @@
 
 import json, datetime
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+
 
 # https://docs.djangoproject.com/fr/1.9/ref/request-response/
 
 
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
+
 
 # https://github.com/pinax/pinax-documents/blob/master/pinax/documents/views.py
 
@@ -96,4 +98,12 @@ def api(req):
     # print(json.dumps(js))
 
     return JsonResponse(js, safe=False, json_dumps_params={"indent": 2})
+
+
+
+def api_event(req, pk):
+    "Api call for a specific event by id"
+    event = get_object_or_404(Event, pk=int(pk))
+    return JsonResponse(event.prepare_json(), safe=False, json_dumps_params={"indent": 2})
+
 
