@@ -107,10 +107,11 @@ class EventBase(models.Model):
 
 class Event(EventBase):
 
-
     # name = models.CharField(max_length=200)
     event_type = models.CharField(max_length=20, choices=_event_type_choices)
     event_subject = models.CharField(max_length=20, choices=_event_subject_choices)
+
+    published = models.BooleanField("Published", default=False, help_text="If false only identified user will see it")
 
     website = models.URLField(blank=True, default="")
     facebook = models.URLField(blank=True, default="")

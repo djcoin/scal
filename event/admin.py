@@ -32,6 +32,7 @@ class LocationAdmin(admin.ModelAdmin):
 
 
 fields = [
+    'published',
     'name', 'start', 'end',
     'event_type', 'event_subject',
     'description', 'website', 'facebook',

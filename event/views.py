@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404
 # https://docs.djangoproject.com/fr/1.9/ref/request-response/
 
 
-from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest, Http404
 
 
 # https://github.com/pinax/pinax-documents/blob/master/pinax/documents/views.py
@@ -93,7 +93,12 @@ def api(req):
     print(u"%s to %s" % (start, end))
 
 
-    js = [e.prepare_json() for e in Event.objects.filter(start__date__gte=start, end__date__lte=end).all()]
+    events = Event.objects.filter(start__date__gte=start, end__date__lte=end)
+
+    if not req.user.is_authenticated():
+        events = events.filter(published=True)
+
+    js = [e.prepare_json() for e in events.all()]
 
     # print(json.dumps(js))
 
@@ -104,6 +109,10 @@ def api(req):
 def api_event(req, pk):
     "Api call for a specific event by id"
     event = get_object_or_404(Event, pk=int(pk))
+
+    if event.published == False and not req.user.is_authenticated():
+        raise Http404("Not authorized")
+
     return JsonResponse(event.prepare_json(), safe=False, json_dumps_params={"indent": 2})
 
 
