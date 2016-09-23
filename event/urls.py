@@ -17,5 +17,15 @@ urlpatterns = [
     url(r'^api/$', views.api, name="event_api"),
 
     url(r'^api/event/(?P<pk>\d+)$', views.api_event, name="event_api_detail"),
+
+    url(r'^autocomplete/location',
+        views.LocationAutocomplete.as_view(),
+        name='autocomplete-location'),
+    url(r'^autocomplete/organizer',
+        views.OrganizerAutocomplete.as_view(),
+        name='autocomplete-organizer'),
+    url(r'^autocomplete/person',
+        views.PersonAutocomplete.as_view(),
+        name='autocomplete-person'),
 ]
 

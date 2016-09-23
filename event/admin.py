@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 from django.contrib import admin
 from .models import Organizer, Person, Location, Event
+from .forms import EventForm
 
 
 class AdminSaveAsRedirect(admin.ModelAdmin):
@@ -18,17 +19,20 @@ class AdminSaveAsRedirect(admin.ModelAdmin):
 
 @admin.register(Organizer)
 class OrganizerAdmin(admin.ModelAdmin):
-        pass
+    list_display = ('name', 'website')
+    search_fields = ['name',]
 
 
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
-        pass
+    list_display = ('name',)
+    search_fields = ['name',]
 
 
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
-        pass
+    list_display = ('city', 'area', 'building', 'address', 'url')
+    search_fields = ['city','address']
 
 
 fields = [
@@ -43,6 +47,7 @@ fields = [
 ]
 
 
+# http://stackoverflow.com/questions/4337304/django-admin-changing-the-widget-of-the-field-in-admin
 
 @admin.register(Event)
 class EventAdmin(AdminSaveAsRedirect):
@@ -50,3 +55,15 @@ class EventAdmin(AdminSaveAsRedirect):
     readonly_fields = ['poster_tag', 'landscape_tag'] # 'json_tag')
 
     list_display = ('name', 'start', 'end', 'get_city' )
+
+    search_fields = ['name', ]
+
+    date_hierarchy = 'start'
+
+    form = EventForm
+    # https://gitlab.com/rosarior/awesome-django#admin-interface
+    # https://pypi.python.org/pypi/django-searchable-select/0.8
+    # http://stackoverflow.com/questions/5385933/a-better-django-admin-manytomany-field-widget
+    # https://github.com/yourlabs/django-autocomplete-light
+
+    # filter_horizontal = ('organizers', 'attendees')

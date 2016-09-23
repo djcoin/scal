@@ -117,6 +117,10 @@ ROOT_URLCONF = "scal.urls"
 WSGI_APPLICATION = "scal.wsgi.application"
 
 INSTALLED_APPS = [
+    # django autocomplete light
+    'dal',
+    'dal_select2',
+
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

@@ -29,6 +29,9 @@ class Organizer(models.Model):
     facebook = models.URLField(blank=True, default="")
     image = models.FileField(blank=True, upload_to='uploads/')
 
+    class Meta:
+        ordering = ['name', ]
+
     def __unicode__(self):
         return self.name
 
@@ -37,6 +40,9 @@ class Person(models.Model):
     name = models.CharField(max_length=60)
     description = models.TextField()
     image = models.FileField(blank=True, upload_to='uploads/')
+
+    class Meta:
+        ordering = ['name', ]
 
     def __unicode__(self):
         return self.name
@@ -150,6 +156,7 @@ class Event(EventBase):
 
     landscape_tag.short_description = 'Landscape image'
     landscape_tag.allow_tags = True
+
 
     def json_tag(self):
         return u'<pre>' + self.as_json() + '</pre>'

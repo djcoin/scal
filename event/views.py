@@ -1,4 +1,5 @@
 
+from dal import autocomplete
 import json, datetime
 from django.shortcuts import render, get_object_or_404
 
@@ -18,7 +19,7 @@ from django.core.urlresolvers import reverse_lazy
 
 
 from .forms import CreateEventForm
-from .models import Event
+from .models import Event, Location, Organizer, Person
 
 
 from django.views.generic import (
@@ -114,5 +115,38 @@ def api_event(req, pk):
         raise Http404("Not authorized")
 
     return JsonResponse(event.prepare_json(), safe=False, json_dumps_params={"indent": 2})
+
+
+
+### AUTOCOMPLETE ###
+
+
+class LocationAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Location.objects.all()
+        if self.q:
+            qs = qs.filter(address__icontains=self.q)
+        return qs
+
+
+class OrganizerAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Organizer.objects.all()
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+        return qs
+
+
+class PersonAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Person.objects.all()
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+        return qs
+
+
+
+
+### AUTOCOMPLETE ###
 
 
