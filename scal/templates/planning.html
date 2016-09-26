@@ -38,15 +38,20 @@ function getEvents(start, end, cb) {
     var url = "{% url "event:event_api" %}" + "?start=" + start + "&end=" + end;
     $.get(url, cb);
 }
+
+function getEvent(id, cb) {
+    var url = "{% url "event:event_api_detail" 0 %}".slice(0, -1) + id;
+    $.get(url, cb);
+}
 </script>
 
 <script src='/site_media/static/public/js/compiled/grille.js'></script>
 
 <script>
 
-setTimeout(function() {
+$(function() {
     launchPlanning();
-}, 50);
+});
 
 </script>
 
